@@ -1,9 +1,15 @@
 {% extends "layout.html" %}
 {% block body %}
 
-    <div class="well editPanel">
+
+    <button type="button" class="btn btn-lg btn-primary" id="add_card_button">
+        <i class="fa fa-plus" aria-hidden="true"></i> Add</button>
+    <br><br>
+    <div class="well editPanel" id="add_card">
         <h2>Add a Card</h2>
         <form action="{{ url_for('add_card') }}" method="post" class="cardForm">
+
+
             <div class="form-group">
                 <label for="general" class="toggleButton btn btn-default btn-lg">General &nbsp;
                     <input type="radio" name="type" value="1" id="general"/>
@@ -33,13 +39,7 @@
     <div class="page-header">
         <h2>{{ cards|length }} Card{{ '' if (cards|length == 1) else 's' }}</h2>
     </div>
-    <div class="btn-group btn-group-md" role="group" aria-label="filters">
-        <a href="{{ url_for('filter_cards', filter_name="all") }}" class="btn btn-{{ "primary" if filter_name == "all" else "default" }}">All</a>
-        <a href="{{ url_for('filter_cards', filter_name="general") }}" class="btn btn-{{ "primary" if filter_name == "general" else "default" }}">General</a>
-        <a href="{{ url_for('filter_cards', filter_name="code") }}" class="btn btn-{{ "primary" if filter_name == "code" else "default" }}">Code</a>
-        <a href="{{ url_for('filter_cards', filter_name="known") }}" class="btn btn-{{ "primary" if filter_name == "known" else "default" }}">Known</a>
-        <a href="{{ url_for('filter_cards', filter_name="unknown") }}" class="btn btn-{{ "primary" if filter_name == "unknown" else "default" }}">Unknown</a>
-    </div>
+
 
     <br />
     <br />
@@ -48,7 +48,7 @@
         {% for card in cards %}
             <tr>
                 <td>
-                    <a href="{{ url_for('edit', card_id=card.id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    <a href="#" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                 </td>
                 <td class="cardContent">
                     <h4>
@@ -69,8 +69,5 @@
             </tr>
         {% endfor %}
     </table>
-
-
-
 
 {% endblock %}

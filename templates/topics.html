@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <button type="button" class="btn btn-lg btn-primary" id="add_topic_button">
+        <i class="fa fa-plus" aria-hidden="true"></i> Add</button>
+    <br><br>
+
+    <div class="row">
+        <div class="col-xs-12 text-center">
+		<div class="list-group">
+                  {% for topic in topics %}
+		  	<a href="{{ url_for('category') }}{{ category }}/{{ topic.topic }}" class="list-group-item list-group-item-action">{{ topic.topic | title }}</a>
+                  {% endfor %}
+                </div> 
+
+	    <div class="col-xs-12 well" id="add_topic">
+		<form action="{{ url_for('add_topic') }}" method="post" class="cardForm">
+
+		    <div class="form-group fieldFront">
+		        <label for="front">Topic</label>
+		        <input type="text" name="topic" id="topic" class="form-control">
+		    </div>
+		    <div class="form-group">
+		        <button type="submit" class="saveButton btn btn-lg btn-primary">Add</button>
+		    </div>
+		</form>
+	    </div>
+		
+        </div>
+    </div>
+
+    <div class="page-header">
+        <h2>{{ topics|length }} Topic{{ '' if (topics|length <= 1) else 's' }} | 
+            {{ topics|length }} Card{{ '' if (topics|length <= 1) else 's' }}</h2>
+    </div>
+    
+
+
+{% endblock %}
