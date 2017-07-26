@@ -1,6 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
 
+    <ol class="breadcrumb">
+        <li><a href="../../">Category</a></li>
+        <li><a href="../">{{category|title}}</a></li>
+        <li class="active">{{topic|title}}</li>
+    </ol>
 
     <button type="button" class="btn btn-lg btn-primary" id="add_card_button">
         <i class="fa fa-plus" aria-hidden="true"></i> Add</button>
@@ -40,6 +45,13 @@
         <h2>{{ cards|length }} Card{{ '' if (cards|length == 1) else 's' }}</h2>
     </div>
 
+    <div class="btn-group btn-group-md" role="group" aria-label="filters">
+        <a href="/filter_cards/all" class="btn btn-primary">All</a>
+        <a href="/filter_cards/general" class="btn btn-default">General</a>
+        <a href="/filter_cards/code" class="btn btn-default">Code</a>
+        <a href="/filter_cards/known" class="btn btn-default">Known</a>
+        <a href="/filter_cards/unknown" class="btn btn-default">Unknown</a>
+     </div>
 
     <br />
     <br />

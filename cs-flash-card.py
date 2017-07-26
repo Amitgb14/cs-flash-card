@@ -13,7 +13,7 @@ app.config.update(dict(
     PASSWORD='default'
 ))
 
-
+categories = ("general", "c++", "python", "ds")
 
 def connect_db():
     rv = sqlite3.connect(app.config['DATABASE'])
@@ -97,7 +97,6 @@ def add_card():
         return redirect(url_for("category")+category.lower()+"/"+topic.lower())
 
 
-categories = ("general", "c++", "python", "ds")
 @app.route("/category/")
 @app.route("/category/<category_type>/")
 @app.route("/category/<category_type>/<topic_type>/")
@@ -132,7 +131,7 @@ def category(category_type=None, topic_type=None):
 	    return render_template("topics.html", topics=topics, category=category_type)
     return render_template("category.html", categories=categories)
 
-        
+
 def get_content(category_type):
     query = """
       SELECT topic FROM cards
