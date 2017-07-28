@@ -10,10 +10,10 @@ app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'db', 'cards.db'),
     SECRET_KEY='development key',
     USERNAME='admin',
-    PASSWORD='default'
+    PASSWORD='ghadge1991'
 ))
 
-categories = ("general", "c++", "python", "ds")
+categories = ("general", "c++", "python", "data structure")
 
 def connect_db():
     rv = sqlite3.connect(app.config['DATABASE'])
@@ -128,8 +128,29 @@ def category(category_type=None, topic_type=None):
             """
             cur = db.execute(query, [category_type])
             topics = cur.fetchall()
-	    return render_template("topics.html", topics=topics, category=category_type)
+            return render_template("topics.html", topics=topics, category=category_type)
     return render_template("category.html", categories=categories)
+
+@app.route("/filter_cards/<filter_name>")
+def filter_cards(filter_name):
+    category_type = session["category"]
+    topic_type =  session["topic"]
+    filters = {"general": "1", "code": "2"}
+    query = """
+            SELECT id, front, back
+            FROM cards
+            WHERE
+            category = ?
+            AND
+            topic = ?"""
+    if filter_name in filters:
+        query += " AND type = "+filters[filter_name]
+    query += " ORDER BY id DESC"
+    db = get_db()
+    cur = db.execute(query, [category_type, topic_type])
+    cards = cur.fetchall()
+    return render_template("cards.html", cards=cards, category=category_type,
+                           topic=topic_type, filter_name=filter_name)
 
 
 def get_content(category_type):
@@ -142,6 +163,57 @@ def get_content(category_type):
     cur = db.execute(query, [category_type])
     return cur.fetchall()
 
+
+@app.route("/edit/<card_id>")
+def edit(card_id):
+    query = """
+            SELECT
+            id, category, topic, type, front, back, priority
+            FROM cards
+            WHERE id = ?
+    """
+    db = get_db()
+    cur = db.execute(query, [card_id])
+    card = cur.fetchone()
+    return render_template("edit.html", card=card)
+
+@app.route("/edit_card", methods=["POST"])
+def edit_card():
+    query = """
+            UPDATE
+                cards
+            SET
+                type = ?,
+                front = ?,
+                back = ?,
+                priority = ?
+            WHERE id = ?
+    """
+    db = get_db()
+    category = session["category"]
+    topic = session["topic"]
+    priority = int(request.form["priority"])
+    db.execute(query,
+               [request.form["type"],
+                request.form["front"],
+                request.form["back"],
+                priority,
+                request.form["card_id"]
+                ])
+    db.commit()
+    flash("Card saved.")
+    return redirect(url_for("category")+category+"/"+topic)
+
+
+@app.route("/delete/<card_id>")
+def delete(card_id):
+    db = get_db()
+    category = session["category"]
+    topic = session["topic"]
+    db.execute("DELETE from cards WHERE id=?", [card_id])
+    db.commit()
+    flash("Card deleted.")
+    return redirect(url_for("category")+category+"/"+topic)
 
 @app.route("/")
 def index():

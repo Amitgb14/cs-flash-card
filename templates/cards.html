@@ -2,8 +2,8 @@
 {% block body %}
 
     <ol class="breadcrumb">
-        <li><a href="../../">Category</a></li>
-        <li><a href="../">{{category|title}}</a></li>
+        <li><a href="{{url_for('category')}}">Category</a></li>
+        <li><a href="{{url_for('category')}}{{category}}/">{{category|title}}</a></li>
         <li class="active">{{topic|title}}</li>
     </ol>
 
@@ -45,13 +45,15 @@
         <h2>{{ cards|length }} Card{{ '' if (cards|length == 1) else 's' }}</h2>
     </div>
 
+
+
+
     <div class="btn-group btn-group-md" role="group" aria-label="filters">
-        <a href="/filter_cards/all" class="btn btn-primary">All</a>
-        <a href="/filter_cards/general" class="btn btn-default">General</a>
-        <a href="/filter_cards/code" class="btn btn-default">Code</a>
-        <a href="/filter_cards/known" class="btn btn-default">Known</a>
-        <a href="/filter_cards/unknown" class="btn btn-default">Unknown</a>
-     </div>
+        <a href="{{ url_for('category')}}{{category}}/{{topic}}/" class="btn btn-{{ "primary" if not filter_name else "default" }}">All</a>
+        <a href="{{ url_for('filter_cards', filter_name="general") }}" class="btn btn-{{ "primary" if filter_name == "general" else "default" }}">General</a>
+        <a href="{{ url_for('filter_cards', filter_name="code") }}" class="btn btn-{{ "primary" if filter_name == "code" else "default" }}">Code</a>
+
+    </div>
 
     <br />
     <br />
@@ -60,7 +62,7 @@
         {% for card in cards %}
             <tr>
                 <td>
-                    <a href="#" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    <a href="/edit/{{card.id}}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                 </td>
                 <td class="cardContent">
                     <h4>
